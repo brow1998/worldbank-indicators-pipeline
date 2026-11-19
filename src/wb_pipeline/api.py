@@ -67,8 +67,11 @@ def fetch_page(session: requests.Session, url: str, api: ApiSettings, sleep=time
     for attempt in range(api.max_retries + 1):
         try:
             return _parse(url, session.get(url, timeout=api.timeout_seconds))
-        except (_Retryable, requests.ConnectionError, requests.Timeout) as exc:
-            last = str(exc)
+        except (requests.exceptions.InvalidURL, requests.exceptions.TooManyRedirects) as exc:
+            raise ApiError(f"{url}: {exc}") from exc
+        except (_Retryable, requests.RequestException) as exc:
+            # Includes timeouts, dropped connections and bodies cut mid-transfer.
+            last = f"{type(exc).__name__}: {exc}"
         if attempt < api.max_retries:
             sleep(api.backoff_seconds * 2**attempt)
     raise ApiError(f"{url}: gave up after {api.max_retries + 1} attempts ({last})")
@@ -89,4 +92,8 @@ def fetch_all_pages(
     for n in range(2, int(first.meta.get("pages") or 1) + 1):
         sleep(api.pause_seconds)
         pages.append(fetch_page(session, url_for(n), api, sleep))
+    total = first.meta.get("total")
+    got = sum(len(p.rows) for p in pages)
+    if total is not None and got != int(total):
+        raise ApiError(f"{base_url}: expected {total} rows across pages, got {got}")
     return pages

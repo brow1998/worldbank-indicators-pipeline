@@ -31,6 +31,7 @@ class ApiSettings:
     backoff_seconds: float
     timeout_seconds: float
     pause_seconds: float
+    second_pass_cooldown_seconds: float = 60  # wait before retrying requests that failed once
 
 
 @dataclass(frozen=True)

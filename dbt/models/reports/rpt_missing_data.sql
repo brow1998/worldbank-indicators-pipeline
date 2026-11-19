@@ -19,6 +19,7 @@ select
     f.years_reported,
     f.years_expected,
     round(100.0 * f.years_reported / f.years_expected, 1) as series_completeness_pct,
+    f.source_response_id,  -- set for null_in_source (the body that said null); NULL if not returned
     f.source_last_updated
 from f
 inner join {{ ref('dim_country') }} as c using (country_iso3)

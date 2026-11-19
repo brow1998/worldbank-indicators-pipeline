@@ -59,3 +59,14 @@ def test_missing_year_is_not_returned(pipeline, fake_api):
     assert pipeline.query(
         "select count(*) from reports.rpt_missing_data where country_iso3 = 'MEX' "
         "and indicator_code = 'NY.GDP.MKTP.CD' and year = 2024") == [(1,)]
+
+
+def test_multi_page_series_lands_every_year(pipeline, fake_api):
+    fake_api.split_into_two_pages("DEU", "SP.POP.TOTL")
+    assert pipeline.run() == 0
+    assert pipeline.query(
+        "select count(*) from raw.api_fetches where country_iso3 = 'DEU' "
+        "and indicator_code = 'SP.POP.TOTL'") == [(2,)]
+    assert pipeline.query(
+        "select count(*) from marts.fct_country_indicator_year where country_iso3 = 'DEU' "
+        "and indicator_code = 'SP.POP.TOTL' and observation_status = 'reported'") == [(7,)]

@@ -55,8 +55,12 @@ World Bank API ──► raw (Python)          ──► staging (dbt views) ─
   `raw.pipeline_runs` records whether the run succeeded. Staging reads only the latest successful
   run per request. A failed run is never visible downstream, and a source that changes and changes
   back (X → Y → X) resolves to X, because "latest" is decided by run, not by body.
-  This also keeps indicators of a country-year from different snapshots, which matters for the
-  GDP-per-capita consistency check.
+  It also guarantees that all indicators of a country-year come from the same snapshot, which
+  the GDP-per-capita consistency check relies on.
+- The origin fails in bursts, so requests that exhaust their retries get **one more pass after a
+  cooldown** (`second_pass_cooldown_seconds`) before the run is declared failed. Any other error
+  (DuckDB, Ctrl-C) also marks the run `failed`; no run is left `running`.
+- Paging is checked for completeness: the rows across all pages must add up to the API's `total`.
 
 ### Data model
 
@@ -78,7 +82,8 @@ Relationships: `fct.country_iso3 → dim_country`, `fct.indicator_code → dim_i
 
 **Traceability:** every fact row's `source_response_id` joins to `raw.api_responses` (exact body
 and request URL) and `raw.api_fetches` (run, page, `fetched_at`, the API's `lastupdated`).
-Country-level reports carry `source_response_id`; aggregates trace through the fact.
+Country-level reports carry `source_response_id` (NULL only where the API returned no row);
+aggregates trace through the fact.
 
 ### Reports (`reports.*` views, exported to `outputs/*.csv`)
 
@@ -87,10 +92,10 @@ Country-level reports carry `source_response_id`; aggregates trace through the f
 | Missing / incomplete combinations | `rpt_missing_data` | every non-`reported` row, with its series' completeness % |
 | Year-over-year change | `rpt_yoy_change` | `abs_change`, `pct_change`; `change_status` ∈ `ok`, `first_year_in_range`, `current_missing`, `prior_missing`, `prior_zero` explains every NULL; no divide-by-zero |
 | Latest-year comparison | `rpt_latest_comparison` | each country at its own latest reported year, `rank_desc`, and `years_behind` the newest year any country has |
-| By income group and year | `rpt_income_group_by_year` | totals summed; GDP per capita = Σ GDP / Σ population; life expectancy population-weighted; `simple_mean` for reference; `countries_reporting` / `countries_expected` and `is_complete` |
+| By income group and year | `rpt_income_group_by_year` | totals summed; GDP per capita = Σ GDP / Σ population; life expectancy population-weighted; `simple_mean` for reference; `countries_in_aggregate` counts countries whose inputs (incl. GDP / population for the ratio and weighting) were all reported, and `is_complete` compares it with the group size |
 
-**Sample outputs** in `outputs/` come from a live run on 2026-11-19 (45 requests, 41/41 dbt
-tests passing). On that date the API reported all 252 combinations (the World Bank had
+**Sample outputs** in `outputs/` come from a live run on 2026-11-19 (45 requests; `dbt build`
+green: 11 models and every data test). On that date the API reported all 252 combinations (the World Bank had
 already published 2024 for all nine countries), so `rpt_missing_data.csv` has only its header.
 The missing-data paths (`null_in_source`, `not_returned`, YoY with missing priors) are covered by
 the offline tests. On live data, setting `years.end: 2025` and running `uv run wb transform`
@@ -120,14 +125,17 @@ income-group report unless you add a rule for it there (its semantics decide sum
 
 **pytest** (`uv run pytest`, fully offline; `tests/fixtures/` holds real recorded responses):
 
-- API client: paging, retries on 5xx / timeouts / HTML-with-200, give-up and exponential backoff,
-  API error payloads, 404 not retried, `[meta, null]` empty series
+- API client: paging and its completeness check against `total`, retries on 5xx / timeouts /
+  dropped connections / HTML-with-200, give-up and exponential backoff, API error payloads,
+  404 not retried, `[meta, null]` empty series
+- ingestion: second pass recovers a transient failure; any unexpected error marks the run failed
 - raw store: identical bodies stored once, manifest per run, run status
 - **reprocessing, end to end through the CLI:** unchanged re-run leaves the fact identical and adds
   no bodies; a corrected value flows to the fact with a new `source_response_id`; a revert
   X → Y → X shows X; an aborted run leaves the fact unchanged; a year missing from the response
-  becomes `not_returned`
-- report logic: YoY with zero and missing priors, stale latest-year flag, ratio-of-sums
+  becomes `not_returned`; a two-page series lands every year in the fact
+- report logic: YoY with zero and missing priors, stale latest-year flag, ratio-of-sums, and an
+  income-group aggregate that is flagged incomplete when a companion input (GDP) is missing
 - Dagster: definitions load with lineage raw → staging → marts → reports → CSV, and a full
   offline materialization succeeds
 
@@ -155,6 +163,12 @@ income-group report unless you add a rule for it there (its semantics decide sum
 - **No Docker:** `uv` already gives a reproducible, locked, one-command environment.
 - **No dbt packages** (dbt_utils etc.): fewer moving parts for a clean checkout; the handful of
   tests needed are written as singular tests.
+- **Data tests gate the export, not the marts.** `dbt build` replaces a table before running its
+  tests, so a failed test stops the pipeline (non-zero exit, no CSVs) but the rebuilt tables stay
+  in DuckDB. Locally that is acceptable; in production I'd build into a staging schema and swap
+  only after tests pass (write-audit-publish, see the production note).
+- **Annual indicators only.** `year` is cast from the API's `date`; a quarterly/monthly
+  indicator (`2023Q1`) would fail the build loudly rather than load wrong data.
 
 ## API behaviour observed (2026-11-19, from one network)
 
@@ -242,7 +256,12 @@ the tests rather than taking it on trust. Concretely:
 
 ## Unfinished work / next steps
 
-- Resume a failed run from its successful requests (today a failed run is fully discarded).
+- Resume a failed run from its successful requests (today a failed run is fully discarded,
+  after one retry pass).
+- Flag when the latest successful snapshot was fetched under a different config
+  (`pipeline_runs.config_hash` is recorded but not yet checked); today `wb transform` after adding
+  a country fails the `dim_country` not-null test, and the fix is to run `wb ingest`.
+- `rpt_latest_comparison` lists only countries with at least one reported year in range.
 - Historical income-group classification.
 - Incremental marts with `MERGE` and an SCD2 snapshot (described above, not built locally).
 - CI (GitHub Actions running `uv run pytest`).

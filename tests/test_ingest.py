@@ -38,3 +38,28 @@ def test_failed_run_not_used(fake_api, cfg, con):
         run_ingest(cfg, con, sleep=NO_SLEEP)
     status, error = _one(con, "select status, error from raw.pipeline_runs")
     assert status == "failed" and "USA" in error
+
+
+def test_unexpected_error_marks_run_failed(fake_api, cfg, con, monkeypatch):
+    import wb_pipeline.ingest as ingest
+
+    def boom(*_a, **_k):
+        raise RuntimeError("disk full")
+    monkeypatch.setattr(ingest, "record_page", boom)
+    with pytest.raises(RuntimeError):
+        run_ingest(cfg, con, sleep=NO_SLEEP)
+    status, error = _one(con, "select status, error from raw.pipeline_runs")
+    assert status == "failed" and "disk full" in error
+
+
+def test_second_pass_recovers_transient_failure(fake_api, cfg, con):
+    fake_api.fail("JPN", "SP.POP.TOTL", times=2)  # first pass exhausts 2 attempts, second pass ok
+    slept = []
+    run_id = run_ingest(cfg, con, sleep=slept.append)
+    assert _one(con, "select status from raw.pipeline_runs where run_id = ?", [run_id]) == ("success",)
+    assert cfg.api.second_pass_cooldown_seconds in slept
+
+
+def test_custom_user_agent_is_sent(fake_api, cfg, con):
+    run_ingest(cfg, con, sleep=NO_SLEEP)
+    assert fake_api.calls[0].request.headers["User-Agent"].startswith("wb-pipeline/")

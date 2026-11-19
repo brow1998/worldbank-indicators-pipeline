@@ -36,9 +36,9 @@ class _Translator(DagsterDbtTranslator):
 
 
 project = DbtProject(project_dir=DBT_DIR, profiles_dir=DBT_DIR)
-if not project.manifest_path.exists():
-    # Clean checkout: build the manifest once so the asset graph can be loaded.
-    run_dbt(["parse"], load_config(WbSettings().config_path), Path(WbSettings().db_path))
+# Parse on every load so the asset graph always matches the dbt project (and works on a clean
+# checkout, where no manifest exists yet). A few seconds, no database work.
+run_dbt(["parse"], load_config(WbSettings().config_path), Path(WbSettings().db_path))
 
 
 @dg.multi_asset(

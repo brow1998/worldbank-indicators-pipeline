@@ -111,3 +111,22 @@ def test_urls_have_no_date_param():
         assert "date=" not in url and ";" not in url
     assert indicator_url(API, "BRA", "SP.POP.TOTL") == \
         "https://api.test/v2/country/BRA/indicator/SP.POP.TOTL"
+
+
+@responses.activate
+def test_chunked_encoding_error_is_retried():
+    responses.get(URL, body=requests.exceptions.ChunkedEncodingError("cut mid-body"))
+    responses.get(URL, body=_page(1, 1, []))
+    assert fetch_page(requests.Session(), URL, API, sleep=NO_SLEEP).rows == []
+
+
+@responses.activate
+def test_short_paging_is_detected():
+    # meta says 3 rows over 2 pages, but page 2 comes back empty: must not pass silently.
+    responses.get(URL, body=_page(1, 2, [_row(2024, 1), _row(2023, 2)]),
+                  match=[responses.matchers.query_param_matcher({"format": "json", "per_page": "2"})])
+    responses.get(URL, body=_page(2, 2, []),
+                  match=[responses.matchers.query_param_matcher(
+                      {"format": "json", "per_page": "2", "page": "2"})])
+    with pytest.raises(ApiError, match="expected 3 rows"):
+        fetch_all_pages(requests.Session(), URL, API, sleep=NO_SLEEP)

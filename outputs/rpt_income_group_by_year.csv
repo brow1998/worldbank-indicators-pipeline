@@ -1,85 +1,85 @@
-income_group,indicator_code,indicator_short_name,year,countries_reporting,countries_expected,is_complete,aggregation_method,aggregate_value,simple_mean
-High income,NY.GDP.MKTP.CD,gdp_usd,2018,5,5,true,sum,34488601683085.258,6897720336617.052
-High income,NY.GDP.MKTP.CD,gdp_usd,2019,5,5,true,sum,35365070826690.39,7073014165338.078
-High income,NY.GDP.MKTP.CD,gdp_usd,2020,5,5,true,sum,34885565945905.9,6977113189181.18
-High income,NY.GDP.MKTP.CD,gdp_usd,2021,5,5,true,sum,38523767613986.59,7704753522797.318
-High income,NY.GDP.MKTP.CD,gdp_usd,2022,5,5,true,sum,40085419049305.125,8017083809861.025
-High income,NY.GDP.MKTP.CD,gdp_usd,2023,5,5,true,sum,42375969292588.71,8475193858517.742
-High income,NY.GDP.MKTP.CD,gdp_usd,2024,5,5,true,sum,44139229469380.875,8827845893876.176
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2018,1,1,true,sum,2702929641648.74,2702929641648.74
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2019,1,1,true,sum,2835606256558.19,2835606256558.19
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2020,1,1,true,sum,2674851578587.27,2674851578587.27
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2021,1,1,true,sum,3167270623260.47,3167270623260.47
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2022,1,1,true,sum,3249938492013.47,3249938492013.47
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2023,1,1,true,sum,3500906030644.76,3500906030644.76
-Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2024,1,1,true,sum,3760813470500.86,3760813470500.86
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2018,3,3,true,sum,3578494804887.1567,1192831601629.0522
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2019,3,3,true,sum,3566724441290.229,1188908147096.743
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2020,3,3,true,sum,2935146653887.345,978382217962.4484
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2021,3,3,true,sum,3407203150114.208,1135734383371.4026
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2022,3,3,true,sum,3826454709394.585,1275484903131.5283
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2023,3,3,true,sum,4366982837894.112,1455660945964.7039
-Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2024,3,3,true,sum,4417455920151.785,1472485306717.2617
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,5,5,true,ratio_of_sums,53753.55406886764,48536.16938119874
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,5,5,true,ratio_of_sums,54897.76943830328,48764.53516181554
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,5,5,true,ratio_of_sums,54021.77381127363,47462.43362976816
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,5,5,true,ratio_of_sums,59616.25488125399,53190.70139089362
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,5,5,true,ratio_of_sums,61775.82213590922,53519.03583269983
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,5,5,true,ratio_of_sums,64880.966547581076,55469.15636062566
-High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,5,5,true,ratio_of_sums,67076.91099229512,56885.50354128686
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,1,1,true,ratio_of_sums,1966.2545517167887,1966.25455171679
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,1,1,true,ratio_of_sums,2041.42863698585,2041.42863698585
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,1,1,true,ratio_of_sums,1907.0425163766881,1907.04251637669
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,1,1,true,ratio_of_sums,2239.6138436748233,2239.61384367482
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,1,1,true,ratio_of_sums,2279.98145719369,2279.98145719369
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,1,1,true,ratio_of_sums,2434.4482634098886,2434.44826340989
-Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,1,1,true,ratio_of_sums,2591.9916607122004,2591.9916607122
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,3,3,true,ratio_of_sums,9192.268704573951,8766.54447935873
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,3,3,true,ratio_of_sums,9080.109471786433,8644.366612163998
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,3,3,true,ratio_of_sums,7411.569561495515,7165.3561211419465
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,3,3,true,ratio_of_sums,8545.759267107534,8371.781189711857
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,3,3,true,ratio_of_sums,9535.196443630366,9073.792023078637
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,3,3,true,ratio_of_sums,10806.879161912344,10080.901739255476
-Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,3,3,true,ratio_of_sums,10857.254213027885,10188.592628662134
-High income,SP.DYN.LE00.IN,life_expectancy_years,2018,5,5,true,population_weighted_mean,80.48474478034143,81.36048780487806
-High income,SP.DYN.LE00.IN,life_expectancy_years,2019,5,5,true,population_weighted_mean,80.66934873690872,81.59289756097562
-High income,SP.DYN.LE00.IN,life_expectancy_years,2020,5,5,true,population_weighted_mean,79.5996712433954,80.88874146341466
-High income,SP.DYN.LE00.IN,life_expectancy_years,2021,5,5,true,population_weighted_mean,79.23287274625643,80.73278048780489
-High income,SP.DYN.LE00.IN,life_expectancy_years,2022,5,5,true,population_weighted_mean,79.69898097497314,80.82892682926828
-High income,SP.DYN.LE00.IN,life_expectancy_years,2023,5,5,true,population_weighted_mean,80.30036547526517,81.26649756097561
-High income,SP.DYN.LE00.IN,life_expectancy_years,2024,5,5,true,population_weighted_mean,80.56585305824085,81.44283414634147
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2018,1,1,true,population_weighted_mean,70.415,70.415
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2019,1,1,true,population_weighted_mean,70.746,70.746
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2020,1,1,true,population_weighted_mean,70.156,70.156
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2021,1,1,true,population_weighted_mean,67.282,67.282
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2022,1,1,true,population_weighted_mean,71.698,71.698
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2023,1,1,true,population_weighted_mean,72.003,72.003
-Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2024,1,1,true,population_weighted_mean,72.235,72.235
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2018,3,3,true,population_weighted_mean,73.71514039841043,71.88666666666667
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2019,3,3,true,population_weighted_mean,73.9222745858375,72.13666666666667
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2020,3,3,true,population_weighted_mean,71.77624093971866,70.035
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2021,3,3,true,population_weighted_mean,70.28416268184598,68.266
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2022,3,3,true,population_weighted_mean,73.11992757705445,71.43299999999999
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2023,3,3,true,population_weighted_mean,74.07910884144226,72.35199999999999
-Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2024,3,3,true,population_weighted_mean,74.25117355522674,72.533
-High income,SP.POP.TOTL,population,2018,5,5,true,sum,641605979.0,128321195.8
-High income,SP.POP.TOTL,population,2019,5,5,true,sum,644198684.0,128839736.8
-High income,SP.POP.TOTL,population,2020,5,5,true,sum,645768613.0,129153722.6
-High income,SP.POP.TOTL,population,2021,5,5,true,sum,646195701.0,129239140.2
-High income,SP.POP.TOTL,population,2022,5,5,true,sum,648885238.0,129777047.6
-High income,SP.POP.TOTL,population,2023,5,5,true,sum,653134063.0,130626812.6
-High income,SP.POP.TOTL,population,2024,5,5,true,sum,658039090.0,131607818.0
-Lower middle income,SP.POP.TOTL,population,2018,1,1,true,sum,1374659064.0,1374659064.0
-Lower middle income,SP.POP.TOTL,population,2019,1,1,true,sum,1389030312.0,1389030312.0
-Lower middle income,SP.POP.TOTL,population,2020,1,1,true,sum,1402617695.0,1402617695.0
-Lower middle income,SP.POP.TOTL,population,2021,1,1,true,sum,1414203896.0,1414203896.0
-Lower middle income,SP.POP.TOTL,population,2022,1,1,true,sum,1425423212.0,1425423212.0
-Lower middle income,SP.POP.TOTL,population,2023,1,1,true,sum,1438069596.0,1438069596.0
-Lower middle income,SP.POP.TOTL,population,2024,1,1,true,sum,1450935791.0,1450935791.0
-Upper middle income,SP.POP.TOTL,population,2018,3,3,true,sum,389293973.0,129764657.66666667
-Upper middle income,SP.POP.TOTL,population,2019,3,3,true,sum,392806326.0,130935442.0
-Upper middle income,SP.POP.TOTL,population,2020,3,3,true,sum,396022277.0,132007425.66666667
-Upper middle income,SP.POP.TOTL,population,2021,3,3,true,sum,398701045.0,132900348.33333333
-Upper middle income,SP.POP.TOTL,population,2022,3,3,true,sum,401297942.0,133765980.66666667
-Upper middle income,SP.POP.TOTL,population,2023,3,3,true,sum,404092872.0,134697624.0
-Upper middle income,SP.POP.TOTL,population,2024,3,3,true,sum,406866767.0,135622255.66666666
+income_group,indicator_code,indicator_short_name,year,countries_expected,countries_reporting,countries_in_aggregate,is_complete,aggregation_method,aggregate_value,simple_mean
+High income,NY.GDP.MKTP.CD,gdp_usd,2018,5,5,5,true,sum,34488601683085.258,6897720336617.052
+High income,NY.GDP.MKTP.CD,gdp_usd,2019,5,5,5,true,sum,35365070826690.39,7073014165338.078
+High income,NY.GDP.MKTP.CD,gdp_usd,2020,5,5,5,true,sum,34885565945905.9,6977113189181.18
+High income,NY.GDP.MKTP.CD,gdp_usd,2021,5,5,5,true,sum,38523767613986.59,7704753522797.318
+High income,NY.GDP.MKTP.CD,gdp_usd,2022,5,5,5,true,sum,40085419049305.125,8017083809861.025
+High income,NY.GDP.MKTP.CD,gdp_usd,2023,5,5,5,true,sum,42375969292588.71,8475193858517.742
+High income,NY.GDP.MKTP.CD,gdp_usd,2024,5,5,5,true,sum,44139229469380.875,8827845893876.176
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2018,1,1,1,true,sum,2702929641648.74,2702929641648.74
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2019,1,1,1,true,sum,2835606256558.19,2835606256558.19
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2020,1,1,1,true,sum,2674851578587.27,2674851578587.27
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2021,1,1,1,true,sum,3167270623260.47,3167270623260.47
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2022,1,1,1,true,sum,3249938492013.47,3249938492013.47
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2023,1,1,1,true,sum,3500906030644.76,3500906030644.76
+Lower middle income,NY.GDP.MKTP.CD,gdp_usd,2024,1,1,1,true,sum,3760813470500.86,3760813470500.86
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2018,3,3,3,true,sum,3578494804887.1567,1192831601629.0522
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2019,3,3,3,true,sum,3566724441290.229,1188908147096.743
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2020,3,3,3,true,sum,2935146653887.345,978382217962.4484
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2021,3,3,3,true,sum,3407203150114.208,1135734383371.4026
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2022,3,3,3,true,sum,3826454709394.585,1275484903131.5283
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2023,3,3,3,true,sum,4366982837894.112,1455660945964.7039
+Upper middle income,NY.GDP.MKTP.CD,gdp_usd,2024,3,3,3,true,sum,4417455920151.785,1472485306717.2617
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,5,5,5,true,ratio_of_sums,53753.55406886764,48536.16938119874
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,5,5,5,true,ratio_of_sums,54897.76943830328,48764.53516181554
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,5,5,5,true,ratio_of_sums,54021.77381127363,47462.43362976816
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,5,5,5,true,ratio_of_sums,59616.25488125399,53190.70139089362
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,5,5,5,true,ratio_of_sums,61775.82213590922,53519.03583269983
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,5,5,5,true,ratio_of_sums,64880.966547581076,55469.15636062566
+High income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,5,5,5,true,ratio_of_sums,67076.91099229512,56885.50354128686
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,1,1,1,true,ratio_of_sums,1966.2545517167887,1966.25455171679
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,1,1,1,true,ratio_of_sums,2041.42863698585,2041.42863698585
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,1,1,1,true,ratio_of_sums,1907.0425163766881,1907.04251637669
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,1,1,1,true,ratio_of_sums,2239.6138436748233,2239.61384367482
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,1,1,1,true,ratio_of_sums,2279.98145719369,2279.98145719369
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,1,1,1,true,ratio_of_sums,2434.4482634098886,2434.44826340989
+Lower middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,1,1,1,true,ratio_of_sums,2591.9916607122004,2591.9916607122
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2018,3,3,3,true,ratio_of_sums,9192.268704573951,8766.54447935873
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2019,3,3,3,true,ratio_of_sums,9080.109471786433,8644.366612163998
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2020,3,3,3,true,ratio_of_sums,7411.569561495515,7165.3561211419465
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2021,3,3,3,true,ratio_of_sums,8545.759267107534,8371.781189711857
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2022,3,3,3,true,ratio_of_sums,9535.196443630366,9073.792023078637
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2023,3,3,3,true,ratio_of_sums,10806.879161912344,10080.901739255476
+Upper middle income,NY.GDP.PCAP.CD,gdp_per_capita_usd,2024,3,3,3,true,ratio_of_sums,10857.254213027885,10188.592628662134
+High income,SP.DYN.LE00.IN,life_expectancy_years,2018,5,5,5,true,population_weighted_mean,80.48474478034143,81.36048780487806
+High income,SP.DYN.LE00.IN,life_expectancy_years,2019,5,5,5,true,population_weighted_mean,80.66934873690872,81.59289756097562
+High income,SP.DYN.LE00.IN,life_expectancy_years,2020,5,5,5,true,population_weighted_mean,79.5996712433954,80.88874146341466
+High income,SP.DYN.LE00.IN,life_expectancy_years,2021,5,5,5,true,population_weighted_mean,79.23287274625643,80.73278048780489
+High income,SP.DYN.LE00.IN,life_expectancy_years,2022,5,5,5,true,population_weighted_mean,79.69898097497314,80.82892682926828
+High income,SP.DYN.LE00.IN,life_expectancy_years,2023,5,5,5,true,population_weighted_mean,80.30036547526517,81.26649756097561
+High income,SP.DYN.LE00.IN,life_expectancy_years,2024,5,5,5,true,population_weighted_mean,80.56585305824085,81.44283414634147
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2018,1,1,1,true,population_weighted_mean,70.415,70.415
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2019,1,1,1,true,population_weighted_mean,70.746,70.746
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2020,1,1,1,true,population_weighted_mean,70.156,70.156
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2021,1,1,1,true,population_weighted_mean,67.282,67.282
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2022,1,1,1,true,population_weighted_mean,71.698,71.698
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2023,1,1,1,true,population_weighted_mean,72.003,72.003
+Lower middle income,SP.DYN.LE00.IN,life_expectancy_years,2024,1,1,1,true,population_weighted_mean,72.235,72.235
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2018,3,3,3,true,population_weighted_mean,73.71514039841043,71.88666666666667
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2019,3,3,3,true,population_weighted_mean,73.9222745858375,72.13666666666667
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2020,3,3,3,true,population_weighted_mean,71.77624093971866,70.035
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2021,3,3,3,true,population_weighted_mean,70.28416268184598,68.266
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2022,3,3,3,true,population_weighted_mean,73.11992757705445,71.43299999999999
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2023,3,3,3,true,population_weighted_mean,74.07910884144226,72.35199999999999
+Upper middle income,SP.DYN.LE00.IN,life_expectancy_years,2024,3,3,3,true,population_weighted_mean,74.25117355522674,72.533
+High income,SP.POP.TOTL,population,2018,5,5,5,true,sum,641605979.0,128321195.8
+High income,SP.POP.TOTL,population,2019,5,5,5,true,sum,644198684.0,128839736.8
+High income,SP.POP.TOTL,population,2020,5,5,5,true,sum,645768613.0,129153722.6
+High income,SP.POP.TOTL,population,2021,5,5,5,true,sum,646195701.0,129239140.2
+High income,SP.POP.TOTL,population,2022,5,5,5,true,sum,648885238.0,129777047.6
+High income,SP.POP.TOTL,population,2023,5,5,5,true,sum,653134063.0,130626812.6
+High income,SP.POP.TOTL,population,2024,5,5,5,true,sum,658039090.0,131607818.0
+Lower middle income,SP.POP.TOTL,population,2018,1,1,1,true,sum,1374659064.0,1374659064.0
+Lower middle income,SP.POP.TOTL,population,2019,1,1,1,true,sum,1389030312.0,1389030312.0
+Lower middle income,SP.POP.TOTL,population,2020,1,1,1,true,sum,1402617695.0,1402617695.0
+Lower middle income,SP.POP.TOTL,population,2021,1,1,1,true,sum,1414203896.0,1414203896.0
+Lower middle income,SP.POP.TOTL,population,2022,1,1,1,true,sum,1425423212.0,1425423212.0
+Lower middle income,SP.POP.TOTL,population,2023,1,1,1,true,sum,1438069596.0,1438069596.0
+Lower middle income,SP.POP.TOTL,population,2024,1,1,1,true,sum,1450935791.0,1450935791.0
+Upper middle income,SP.POP.TOTL,population,2018,3,3,3,true,sum,389293973.0,129764657.66666667
+Upper middle income,SP.POP.TOTL,population,2019,3,3,3,true,sum,392806326.0,130935442.0
+Upper middle income,SP.POP.TOTL,population,2020,3,3,3,true,sum,396022277.0,132007425.66666667
+Upper middle income,SP.POP.TOTL,population,2021,3,3,3,true,sum,398701045.0,132900348.33333333
+Upper middle income,SP.POP.TOTL,population,2022,3,3,3,true,sum,401297942.0,133765980.66666667
+Upper middle income,SP.POP.TOTL,population,2023,3,3,3,true,sum,404092872.0,134697624.0
+Upper middle income,SP.POP.TOTL,population,2024,3,3,3,true,sum,406866767.0,135622255.66666666

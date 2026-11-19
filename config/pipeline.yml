@@ -35,4 +35,5 @@ api:
   max_retries: 6
   backoff_seconds: 1.0
   timeout_seconds: 20  # the origin sometimes hangs instead of refusing; time out and retry
+  second_pass_cooldown_seconds: 60  # requests that exhausted retries get one more pass after this
   pause_seconds: 0.5   # polite pacing between requests; the API's WAF blocks bursts

@@ -24,6 +24,7 @@ class FakeApi:
     def __init__(self):
         index = json.loads((FIXTURES / "index.json").read_text())
         self.bodies = {url: (FIXTURES / name).read_text() for url, name in index.items()}
+        self.failures_left = {}
 
     def url_for(self, iso3, code=None):
         suffix = f"/indicator/{code}?format=json&per_page=100" if code else "?format=json"
@@ -35,7 +36,8 @@ class FakeApi:
         """Apply fn(rows) -> rows to a recorded indicator series and serve the result."""
         url = self.url_for(iso3, code)
         meta, rows = json.loads(self.bodies[url])
-        self.bodies[url] = json.dumps([meta, fn(rows)])
+        rows = fn(rows)
+        self.bodies[url] = json.dumps([{**meta, "total": len(rows)}, rows])
 
     def set_value(self, iso3, code, year, value):
         def fn(rows):
@@ -45,10 +47,27 @@ class FakeApi:
             return rows
         self.edit_series(iso3, code, fn)
 
-    def fail(self, iso3, code=None):
-        self.bodies[self.url_for(iso3, code)] = self.FAIL
+    def fail(self, iso3, code=None, times=None):
+        """Serve 502s for this request: forever, or only for the next `times` calls."""
+        url = self.url_for(iso3, code)
+        if times is None:
+            self.bodies[url] = self.FAIL
+        else:
+            self.failures_left[url] = times
+
+    def split_into_two_pages(self, iso3, code):
+        """Serve a recorded series as two pages (page 2 via `&page=2`), like a long series would."""
+        url = self.url_for(iso3, code)
+        meta, rows = json.loads(self.bodies[url])
+        half = len(rows) // 2
+        meta = {**meta, "pages": 2, "total": len(rows)}
+        self.bodies[url] = json.dumps([{**meta, "page": 1}, rows[:half]])
+        self.bodies[url + "&page=2"] = json.dumps([{**meta, "page": 2}, rows[half:]])
 
     def _callback(self, request):
+        if self.failures_left.get(request.url, 0) > 0:
+            self.failures_left[request.url] -= 1
+            return 502, {}, WAF_HTML
         body = self.bodies.get(request.url)
         if body is None:
             return 404, {}, "not recorded"
@@ -63,13 +82,15 @@ def fake_api():
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
         rsps.add_callback(responses.GET, re.compile(r"https://api\.worldbank\.org/.*"),
                           callback=api._callback)
+        api.calls = rsps.calls
         yield api
 
 
 @pytest.fixture
 def cfg():
     c = load_config(ROOT / "config" / "pipeline.yml")
-    return replace(c, api=replace(c.api, pause_seconds=0, backoff_seconds=0, max_retries=1))
+    return replace(c, api=replace(c.api, pause_seconds=0, backoff_seconds=0, max_retries=1,
+                                  second_pass_cooldown_seconds=7))
 
 
 @pytest.fixture
@@ -90,7 +111,8 @@ class Pipeline:
     def __init__(self, tmp_path):
         import yaml
         data = yaml.safe_load((ROOT / "config" / "pipeline.yml").read_text())
-        data["api"].update(pause_seconds=0, backoff_seconds=0, max_retries=1)
+        data["api"].update(pause_seconds=0, backoff_seconds=0, max_retries=1,
+                           second_pass_cooldown_seconds=0)
         self.config = tmp_path / "pipeline.yml"
         self.config.write_text(yaml.safe_dump(data))
         self.db = tmp_path / "warehouse.duckdb"

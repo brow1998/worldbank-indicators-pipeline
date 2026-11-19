@@ -68,3 +68,15 @@ def test_cli_run_offline_writes_four_csvs(pipeline):
     with open(pipeline.out / "rpt_yoy_change.csv") as fh:
         rows = list(csv.DictReader(fh))
     assert len(rows) == 9 * 4 * 7 and "source_response_id" in rows[0]
+
+
+def test_income_group_incomplete_when_companion_input_missing(pipeline, fake_api):
+    # GDP per capita is reported for USA 2020 but GDP is not: the ratio cannot use USA,
+    # so the group aggregate must not claim to be complete.
+    fake_api.set_value("USA", "NY.GDP.MKTP.CD", 2020, None)
+    _ingest_and_model(pipeline)
+    (in_agg, expected, complete), = pipeline.query("""
+        select countries_in_aggregate, countries_expected, is_complete
+        from reports.rpt_income_group_by_year
+        where income_group = 'High income' and indicator_code = 'NY.GDP.PCAP.CD' and year = 2020""")
+    assert in_agg == expected - 1 and complete is False

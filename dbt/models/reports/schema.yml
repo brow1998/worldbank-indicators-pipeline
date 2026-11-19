@@ -3,6 +3,9 @@ version: 2
 models:
   - name: rpt_missing_data
     description: Q1 - every configured combination that is not reported, with series completeness.
+    data_tests:
+      - unique:
+          column_name: "country_iso3 || '|' || indicator_code || '|' || year"
   - name: rpt_yoy_change
     description: Q2 - year-over-year change; change_status explains every NULL pct_change.
     data_tests:
