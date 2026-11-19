@@ -1,8 +1,10 @@
 """World Bank API v2 client: retries, WAF/HTML detection and paging.
 
-Request shapes are deliberately plain (one country, one indicator, no `date=`): on 2026-11-19 the
-API's WAF answered 502 + HTML to `date=`/`mrv=` filters and `;`-joined country lists, and also
-intermittently to plain URLs. Years are filtered downstream instead.
+Request shapes are deliberately plain (one country, one indicator, no `date=`). Observed from one
+network on 2026-11-19: the API sits behind Cloudflare; cached URLs answer in milliseconds, while
+requests that reach the origin intermittently hang or come back as 502 + an HTML error page
+(`date=` filters and `;`-joined country lists failed consistently). So: plain URLs, full series
+per (country, indicator) with years filtered downstream, a read timeout, and retries with backoff.
 """
 
 from __future__ import annotations
@@ -76,7 +78,11 @@ def fetch_all_pages(
     session: requests.Session, base_url: str, api: ApiSettings, sleep=time.sleep
 ) -> list[Page]:
     def url_for(page: int) -> str:
-        return f"{base_url}?{urlencode({'format': 'json', 'per_page': api.per_page, 'page': page})}"
+        params = {"format": "json", "per_page": api.per_page}
+        if page > 1:
+            # Page 1 omits `page=` so it matches the commonly cached URL (fewer origin round trips).
+            params["page"] = page
+        return f"{base_url}?{urlencode(params)}"
 
     first = fetch_page(session, url_for(1), api, sleep)
     pages = [first]

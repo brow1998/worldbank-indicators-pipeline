@@ -19,6 +19,8 @@ class Indicator:
     name: str
     short_name: str
     unit: str
+    min_value: float | None = None  # plausibility bounds checked by dbt tests (optional)
+    max_value: float | None = None
 
 
 @dataclass(frozen=True)

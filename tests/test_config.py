@@ -55,4 +55,5 @@ def test_dbt_vars_carry_everything_dbt_needs():
     assert v["indicators"][0] == {
         "code": "SP.POP.TOTL", "name": "Population, total",
         "short_name": "population", "unit": "people",
+        "min_value": 1, "max_value": None,
     }

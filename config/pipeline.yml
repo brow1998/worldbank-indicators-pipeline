@@ -1,4 +1,5 @@
 # Add a country (ISO3) or an indicator here; no code changes needed.
+# min_value/max_value are optional plausibility bounds enforced by dbt tests.
 countries: [BRA, CAN, DEU, GBR, IND, JPN, MEX, USA, ZAF]
 
 indicators:
@@ -6,18 +7,23 @@ indicators:
     name: Population, total
     short_name: population
     unit: people
+    min_value: 1
   - code: NY.GDP.MKTP.CD
     name: GDP (current US$)
     short_name: gdp_usd
     unit: current USD
+    min_value: 0
   - code: NY.GDP.PCAP.CD
     name: GDP per capita (current US$)
     short_name: gdp_per_capita_usd
     unit: current USD per person
+    min_value: 0
   - code: SP.DYN.LE00.IN
     name: Life expectancy at birth, total (years)
     short_name: life_expectancy_years
     unit: years
+    min_value: 20
+    max_value: 100
 
 years:
   start: 2018
@@ -25,8 +31,8 @@ years:
 
 api:
   base_url: https://api.worldbank.org/v2
-  per_page: 1000
-  max_retries: 5
+  per_page: 100     # a full 1960+ series fits in one page
+  max_retries: 6
   backoff_seconds: 1.0
-  timeout_seconds: 30
+  timeout_seconds: 20  # the origin sometimes hangs instead of refusing; time out and retry
   pause_seconds: 0.5   # polite pacing between requests; the API's WAF blocks bursts

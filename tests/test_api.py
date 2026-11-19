@@ -30,14 +30,15 @@ def _row(year, value):
 def test_fetch_all_pages_follows_pages():
     responses.get(URL, body=_page(1, 2, [_row(2024, 1), _row(2023, 2)]),
                   match=[responses.matchers.query_param_matcher(
-                      {"format": "json", "per_page": "2", "page": "1"})])
+                      {"format": "json", "per_page": "2"})])
     responses.get(URL, body=_page(2, 2, [_row(2022, 3)]),
                   match=[responses.matchers.query_param_matcher(
                       {"format": "json", "per_page": "2", "page": "2"})])
     pages = fetch_all_pages(requests.Session(), URL, API, sleep=NO_SLEEP)
     assert [p.meta["page"] for p in pages] == [1, 2]
     assert sum(len(p.rows) for p in pages) == 3
-    assert pages[1].url.endswith("page=2")
+    assert "page=" not in pages[0].url.replace("per_page", "")
+    assert pages[1].url.endswith("&page=2")
 
 
 @responses.activate
