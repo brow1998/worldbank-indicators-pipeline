@@ -1,0 +1,12 @@
+data/
+.venv/
+dbt/target/
+dbt/logs/
+dbt/.user.yml
+docs/superpowers/
+assessment.pdf
+.superpowers/
+__pycache__/
+.pytest_cache/
+.dagster_home/
+outputs/.tmp*

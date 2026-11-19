@@ -1,0 +1,32 @@
+# Add a country (ISO3) or an indicator here; no code changes needed.
+countries: [BRA, CAN, DEU, GBR, IND, JPN, MEX, USA, ZAF]
+
+indicators:
+  - code: SP.POP.TOTL
+    name: Population, total
+    short_name: population
+    unit: people
+  - code: NY.GDP.MKTP.CD
+    name: GDP (current US$)
+    short_name: gdp_usd
+    unit: current USD
+  - code: NY.GDP.PCAP.CD
+    name: GDP per capita (current US$)
+    short_name: gdp_per_capita_usd
+    unit: current USD per person
+  - code: SP.DYN.LE00.IN
+    name: Life expectancy at birth, total (years)
+    short_name: life_expectancy_years
+    unit: years
+
+years:
+  start: 2018
+  end: 2024
+
+api:
+  base_url: https://api.worldbank.org/v2
+  per_page: 1000
+  max_retries: 5
+  backoff_seconds: 1.0
+  timeout_seconds: 30
+  pause_seconds: 0.5   # polite pacing between requests; the API's WAF blocks bursts

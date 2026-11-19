@@ -1,0 +1,27 @@
+[project]
+name = "wb-pipeline"
+version = "0.1.0"
+description = "Config-driven World Bank indicators pipeline (Python + DuckDB + dbt + Dagster)"
+authors = [
+    { name = "Bruno Andrade Santos", email = "brow1998@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "dbt-duckdb>=1.11.1",
+    "duckdb>=2.0.0",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+wb = "wb_pipeline.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.26,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "responses>=0.26.3",
+]
