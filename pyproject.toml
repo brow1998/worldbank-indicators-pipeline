@@ -3,7 +3,7 @@ name = "wb-pipeline"
 version = "0.1.0"
 description = "Config-driven World Bank indicators pipeline (Python + DuckDB + dbt + Dagster)"
 authors = [
-    { name = "Bruno Andrade Santos", email = "brow1998@gmail.com" }
+    { name = "Bruno Andrade Santos" }
 ]
 requires-python = ">=3.12"
 dependencies = [

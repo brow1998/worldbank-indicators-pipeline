@@ -8,6 +8,30 @@ on DuckDB. Dagster orchestrates it as assets with full lineage, and a single com
 **Scope (from `config/pipeline.yml`):** BRA, CAN, DEU, GBR, IND, JPN, MEX, USA, ZAF ×
 population, GDP (current US$), GDP per capita (current US$), life expectancy × 2018–2024.
 
+## How this answers the assessment
+
+| Requirement | Where |
+|---|---|
+| Country metadata + indicator observations from the API | `src/wb_pipeline/ingest.py`, `api.py` |
+| Paging and API failures | `api.py` (retries, backoff, HTML/502 detection, paging completeness), second pass in `ingest.py` |
+| Every value traceable to its API response | `fct_country_indicator_year.source_response_id` → `raw.api_responses` ([Traceability](#data-model)) |
+| Single documented command from a clean checkout | `uv run wb run` ([Quick start](#quick-start)) |
+| Re-run with unchanged source creates no duplicates | content-addressed raw + latest-successful-run staging; `tests/test_reprocessing.py` |
+| No cloud resources / accounts | local DuckDB; public API only |
+| Raw separate from cleaned and analytics-ready | `raw` → `staging` → `marts` → `reports` schemas |
+| Grain, business keys, relationships documented | [Data model](#data-model), `dbt/models/**/schema.yml` |
+| Standardized for analysts | typed, renamed columns; explicit `observation_status`; short indicator names |
+| Add a country / indicator by configuration | `config/pipeline.yml` ([how](#adding-a-country-or-an-indicator)) |
+| Missing / incomplete combinations | `reports.rpt_missing_data` |
+| YoY change with missing or zero priors | `reports.rpt_yoy_change` (`change_status`) |
+| Latest-available-year comparison | `reports.rpt_latest_comparison` |
+| Indicators by income group, by year | `reports.rpt_income_group_by_year` |
+| Automated DQ checks, cross-indicator consistency | `dbt/tests/`, schema tests ([Data quality](#data-quality-and-tests)) |
+| Tests without the live API | `uv run pytest` (recorded real responses in `tests/fixtures/`) |
+| Production design note | [Production design note](#production-design-note) |
+| Sample output | `outputs/*.csv` |
+| Optional extra | Dagster asset graph with lineage, asset checks and a daily schedule |
+
 ## Quick start
 
 Requires [uv](https://docs.astral.sh/uv/) (it installs Python 3.12 and every dependency).
@@ -22,17 +46,45 @@ uv run dagster dev     # optional: Dagster UI at http://localhost:3000 (asset gr
 rewrites `outputs/`. Sub-steps can be run on their own: `uv run wb ingest | transform | export`.
 Exit code is non-zero if the API cannot be read or any data test fails.
 
-Inspect the warehouse with any DuckDB client, e.g. `uv run python -c "import duckdb;
-print(duckdb.connect('data/warehouse.duckdb').sql('from reports.rpt_latest_comparison'))"`.
+Inspect the warehouse with any DuckDB client, for example:
+
+```bash
+uv run python -c "import duckdb; print(duckdb.connect('data/warehouse.duckdb').sql('''
+  select indicator_short_name, country_iso3, latest_year, value, rank_desc
+  from reports.rpt_latest_comparison order by indicator_short_name, rank_desc'''))"
+```
+
+### Dagster (optional)
+
+`uv run dagster dev` serves the same pipeline as a Dagster asset graph at http://localhost:3000.
+Every dbt model is an asset, every dbt test an asset check, and `wb_daily_job` has a daily
+schedule (off by default, as Dagster ships it). Use **Materialize all** on the Lineage page to run
+it. Set `DAGSTER_HOME` to a directory to keep run history between sessions.
+
+### Repository layout
+
+```
+config/pipeline.yml        countries, indicators (+ plausibility bounds), years, API settings
+src/wb_pipeline/           api.py (HTTP), ingest.py, raw_store.py, transform.py (dbt), export.py,
+                           cli.py (`wb`), orchestration.py (Dagster)
+dbt/                       dbt project: models/{staging,intermediate,marts,reports}, tests/, macros/
+tests/                     pytest suite + fixtures/ (real API responses, recorded)
+tools/record_fixtures.py   re-record fixtures from the live API (resumable)
+outputs/                   sample report CSVs from a live run
+```
 
 ## Architecture
 
-```
-World Bank API ──► raw (Python)          ──► staging (dbt views) ──► marts (dbt tables) ──► reports (dbt views) ──► outputs/*.csv
-                   raw.api_responses          stg_wb__latest_fetches  dim_country             rpt_missing_data
-                   raw.api_fetches            stg_wb__observations    dim_indicator           rpt_yoy_change
-                   raw.pipeline_runs          stg_wb__countries       fct_country_indicator_  rpt_latest_comparison
-                                              int_expected_grid         year                  rpt_income_group_by_year
+```mermaid
+flowchart LR
+    API[World Bank API v2] --> ING[Python ingest<br/>retries, paging]
+    ING --> RAW[(raw<br/>api_responses<br/>api_fetches<br/>pipeline_runs)]
+    RAW --> STG[staging<br/>stg_wb__latest_fetches<br/>stg_wb__observations<br/>stg_wb__countries]
+    CFG[config/pipeline.yml] --> GRID[intermediate<br/>int_expected_grid]
+    STG --> MARTS[marts<br/>dim_country<br/>dim_indicator<br/>fct_country_indicator_year]
+    GRID --> MARTS
+    MARTS --> RPT[reports<br/>rpt_missing_data<br/>rpt_yoy_change<br/>rpt_latest_comparison<br/>rpt_income_group_by_year]
+    RPT --> CSV[outputs/*.csv]
 ```
 
 | Layer | What it holds | Written by |
@@ -72,6 +124,34 @@ World Bank API ──► raw (Python)          ──► staging (dbt views) ─
 
 Relationships: `fct.country_iso3 → dim_country`, `fct.indicator_code → dim_indicator` (tested).
 
+```mermaid
+erDiagram
+    dim_country ||--o{ fct_country_indicator_year : country_iso3
+    dim_indicator ||--o{ fct_country_indicator_year : indicator_code
+    fct_country_indicator_year }o--o| api_responses : source_response_id
+    api_responses ||--o{ api_fetches : response_id
+    pipeline_runs ||--o{ api_fetches : run_id
+    fct_country_indicator_year {
+        varchar country_iso3 PK
+        varchar indicator_code PK
+        int year PK
+        double value
+        varchar observation_status
+        varchar source_response_id FK
+    }
+    dim_country {
+        varchar country_iso3 PK
+        varchar country_name
+        varchar region
+        varchar income_group
+    }
+    dim_indicator {
+        varchar indicator_code PK
+        varchar indicator_short_name
+        varchar unit
+    }
+```
+
 `observation_status` makes missing data explicit instead of zero or absent:
 
 | status | meaning | `value` | `source_response_id` |
@@ -95,8 +175,9 @@ aggregates trace through the fact.
 | By income group and year | `rpt_income_group_by_year` | totals summed; GDP per capita = Σ GDP / Σ population; life expectancy population-weighted; `simple_mean` for reference; `countries_in_aggregate` counts countries whose inputs (incl. GDP / population for the ratio and weighting) were all reported, and `is_complete` compares it with the group size |
 
 **Sample outputs** in `outputs/` come from a live run on 2026-11-19 (45 requests; `dbt build`
-green: 11 models and every data test). On that date the API reported all 252 combinations (the World Bank had
-already published 2024 for all nine countries), so `rpt_missing_data.csv` has only its header.
+green: 11 models and every data test). On that date the API reported all 252 combinations (the
+World Bank had already published 2024 for all nine countries), so `rpt_missing_data.csv` has only
+its header.
 The missing-data paths (`null_in_source`, `not_returned`, YoY with missing priors) are covered by
 the offline tests. On live data, setting `years.end: 2025` and running `uv run wb transform`
 (no new API calls, since raw already holds the full series) yields 9 `null_in_source` rows for 2025.
@@ -123,7 +204,8 @@ income-group report unless you add a rule for it there (its semantics decide sum
 - every observation belongs to the country and indicator that was requested
 - configured countries all have metadata (name, income group)
 
-**pytest** (`uv run pytest`, fully offline; `tests/fixtures/` holds real recorded responses):
+**pytest** (`uv run pytest`, 46 tests, fully offline; `tests/fixtures/` holds real recorded
+responses; also run by GitHub Actions on every push):
 
 - API client: paging and its completeness check against `total`, retries on 5xx / timeouts /
   dropped connections / HTML-with-200, give-up and exponential backoff, API error payloads,
@@ -206,6 +288,11 @@ the tests rather than taking it on trust. Concretely:
   flakiness instead. Code comments were corrected to claim only what was observed.
 - **Measuring before asserting.** The GDP-per-capita tolerance was set after measuring
   GDP / population against the reported value (identical to rounding), not guessed.
+- **Independent review.** A fresh AI review of the finished branch found no critical issues and
+  four important ones, all fixed with a failing test first: a dropped connection mid-body wasn't
+  retried and could leave a run stuck as `running`; no second pass for a flaky origin; no
+  end-to-end multi-page test; and an `is_complete` flag that ignored missing GDP / population
+  inputs in the income-group report.
 - **Implementation** was test-first, task by task, from a written plan; I reviewed every model and
   test and own the decisions in this README.
 
@@ -264,4 +351,4 @@ the tests rather than taking it on trust. Concretely:
 - `rpt_latest_comparison` lists only countries with at least one reported year in range.
 - Historical income-group classification.
 - Incremental marts with `MERGE` and an SCD2 snapshot (described above, not built locally).
-- CI (GitHub Actions running `uv run pytest`).
+- Explicit dbt model contracts (column types enforced) for the marts.
