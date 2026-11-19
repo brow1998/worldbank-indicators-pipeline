@@ -7,6 +7,9 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "dagster>=1.13.30",
+    "dagster-dbt>=0.29.30",
+    "dagster-webserver>=1.13.30",
     "dbt-duckdb>=1.11.1",
     "duckdb>=2.0.0",
     "pyyaml>=6.0.3",
@@ -25,3 +28,6 @@ dev = [
     "pytest>=9.2.0",
     "responses>=0.26.3",
 ]
+
+[tool.dagster]
+module_name = "wb_pipeline.orchestration"
