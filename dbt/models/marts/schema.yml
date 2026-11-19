@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: dim_country
+    description: One row per configured country.
+    columns:
+      - name: country_iso3
+        data_tests: [unique, not_null]
+      - name: country_name
+        description: Null here means the API returned no metadata for a configured country.
+        data_tests: [not_null]
+      - name: income_group
+        data_tests: [not_null]
+
+  - name: dim_indicator
+    description: One row per configured indicator.
+    columns:
+      - name: indicator_code
+        data_tests: [unique, not_null]
+      - name: indicator_short_name
+        data_tests: [unique, not_null]
+
+  - name: fct_country_indicator_year
+    description: >
+      Dense yearly fact. Grain: country x indicator x year over the configured range.
+      Missing data is explicit via observation_status, never zero.
+    data_tests:
+      - unique:
+          column_name: "country_iso3 || '|' || indicator_code || '|' || year"
+    columns:
+      - name: country_iso3
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_country'), field: country_iso3}}
+      - name: indicator_code
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_indicator'), field: indicator_code}}
+      - name: year
+        data_tests: [not_null]
+      - name: observation_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [reported, null_in_source, not_returned]

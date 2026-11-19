@@ -1,0 +1,7 @@
+wb:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('WB_DB_PATH', '../data/warehouse.duckdb') }}"
+      threads: 4

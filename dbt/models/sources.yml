@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: wb_raw
+    schema: raw
+    description: Landing zone written by the Python ingestion (src/wb_pipeline/raw_store.py).
+    tables:
+      - name: pipeline_runs
+        description: One row per ingestion run; only status = 'success' runs are read downstream.
+      - name: api_fetches
+        description: Manifest; one row per run x request x page, pointing at the body it got.
+      - name: api_responses
+        description: Content-addressed response bodies, exactly as returned by the API.

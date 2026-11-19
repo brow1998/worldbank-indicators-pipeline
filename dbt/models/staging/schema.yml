@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_wb__observations
+    data_tests:
+      - unique:
+          column_name: "country_iso3 || '|' || indicator_code || '|' || year"
+    columns:
+      - name: year
+        data_tests: [not_null]
+      - name: response_id
+        data_tests: [not_null]
+  - name: stg_wb__countries
+    columns:
+      - name: country_iso3
+        data_tests: [unique, not_null]

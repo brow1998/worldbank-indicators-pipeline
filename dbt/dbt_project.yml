@@ -1,0 +1,35 @@
+name: wb_indicators
+version: "1.0.0"
+profile: wb
+config-version: 2
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: target
+clean-targets: ["target"]
+
+# Defaults so `dbt parse` works standalone; the pipeline always passes the real values from
+# config/pipeline.yml via --vars.
+vars:
+  countries: []
+  indicators: []
+  start_year: 2018
+  end_year: 2024
+  # Relative tolerance for GDP per capita vs GDP / population (measured 0.0 on real data).
+  gdp_per_capita_tolerance: 0.001
+
+models:
+  wb_indicators:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
+    reports:
+      +schema: reports
+      +materialized: view
