@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: rpt_missing_data
+    description: Q1 - every configured combination that is not reported, with series completeness.
+  - name: rpt_yoy_change
+    description: Q2 - year-over-year change; change_status explains every NULL pct_change.
+    data_tests:
+      - unique:
+          column_name: "country_iso3 || '|' || indicator_code || '|' || year"
+    columns:
+      - name: change_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [ok, first_year_in_range, current_missing, prior_missing, prior_zero]
+  - name: rpt_latest_comparison
+    description: Q3 - each country at its latest reported year per indicator.
+    data_tests:
+      - unique:
+          column_name: "country_iso3 || '|' || indicator_code"
+  - name: rpt_income_group_by_year
+    description: Q4 - indicators aggregated by income group and year.
+    data_tests:
+      - unique:
+          column_name: "income_group || '|' || indicator_code || '|' || year"
